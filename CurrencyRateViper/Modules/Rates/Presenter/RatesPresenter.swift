@@ -11,6 +11,13 @@ import UIKit
 class RatesPresenter: RatesModuleInput, RatesViewOutput, RatesInteractorOutput {
     
     var rates = [Rate]()
+    var currentDate: String {
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        
+        return formatter.string(from: date)
+    }
     
     weak var view: RatesViewInput!
     var interactor: RatesInteractorInput!
@@ -45,15 +52,18 @@ class RatesPresenter: RatesModuleInput, RatesViewOutput, RatesInteractorOutput {
     }
     
     // MARK: - RatesViewOutput
-
+    
     func viewIsReady() {
         view.setupInitialState()
-        view.startLoadingSpinner()
         interactor.loadRates()
     }
     
     func tappedCell(with rate: Rate) {
         router.showDetail(with: rate)
+    }
+    
+    func draggedTable() {
+        interactor.loadRates()
     }
     
     // MARK: - RatesInteractorOutput
@@ -66,15 +76,13 @@ class RatesPresenter: RatesModuleInput, RatesViewOutput, RatesInteractorOutput {
                                   salePrice: formatPrice(input: $0.sale, currency: $0.currencyCodeFrom),
                                   deltaBuy: $0.deltaBuy.convertToDouble(),
                                   deltaSale: $0.deltaSale.convertToDouble()
-                                )
+        )
         }
         
-        view.stopLoadingSpinner()
         view.handleRatesChanged()
     }
     
     func handleLoadError(_ error: CRError) {
-        view.stopLoadingSpinner()
-        view.showAlert(with: error)
+        view.ratesLoadError(error)
     }
 }

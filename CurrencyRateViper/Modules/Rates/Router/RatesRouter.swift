@@ -24,5 +24,4 @@ class RatesRouter: RatesRouterInput {
         
         viewController.present(detailVC, animated: true)
     }
-
 }

@@ -7,12 +7,12 @@
 //
 
 protocol DetailViewOutput {
-
+    
     /**
-        @author Vitaly Prosvetov
-        Notify presenter that view is ready
-    */
-
+     @author Vitaly Prosvetov
+     Notify presenter that view is ready
+     */
+    
     func viewIsReady()
     func tappedXButton()
 }

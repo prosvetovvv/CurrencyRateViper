@@ -24,7 +24,7 @@ class DetailViewController: UIViewController, DetailViewInput {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     // MARK: - Life cycle
     
     override func loadView() {
@@ -37,7 +37,7 @@ class DetailViewController: UIViewController, DetailViewInput {
         configurator.configure(viewController: self)
         output.viewIsReady()
     }
-
+    
     // MARK: - DetailViewInput
     
     func setupInitialState() {

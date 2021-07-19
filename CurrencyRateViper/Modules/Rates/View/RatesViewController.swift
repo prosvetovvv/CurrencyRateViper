@@ -11,11 +11,11 @@ import UIKit
 class RatesViewController: UIViewController, RatesViewInput {
     
     private let rootView = RatesView()
-
+    
     var output: RatesViewOutput!
     var presenter: RatesPresenter!
     let configurator: RatesConfiguratorProtocol = RatesModuleConfigurator()
-
+    
     // MARK: - Life cycle
     
     override func loadView() {
@@ -28,8 +28,8 @@ class RatesViewController: UIViewController, RatesViewInput {
         configurator.configure(viewController: self)
         output.viewIsReady()
     }
-
-
+    
+    
     // MARK: - RatesViewInput
     
     func setupInitialState() {
@@ -39,43 +39,55 @@ class RatesViewController: UIViewController, RatesViewInput {
         rootView.tableView.dataSource = self
         rootView.tableView.delegate = self
         
+        rootView.tableView.refreshControl = UIRefreshControl()
+        rootView.tableView.refreshControl?.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+        
+        view.addSubview(spinnerView)
+        
     }
     
     func handleRatesChanged() {
         rootView.tableView.reloadData()
+        
+        rootView.dateLabel.isHidden = false
+        rootView.dateLabel.text = "Обновлено: \(output.currentDate)"
+        
+        dismissSpinnerView()
+        rootView.tableView.refreshControl?.endRefreshing()
     }
     
-    func showAlert(with error: CRError) {
+    func ratesLoadError(_ error: CRError) {
+        dismissSpinnerView()
+        rootView.tableView.refreshControl?.endRefreshing()
         presentCRAlertOnMainThread(title: "Ошибка", message: error.rawValue, buttonTitle: "Ok", completionHandler: nil)
     }
     
-    func startLoadingSpinner() {
-        view.addSubview(spinnerView)
-    }
+    // MARK: - Objc
     
-    func stopLoadingSpinner() {
-        dismissSpinnerView()
+    @objc
+    private func handleRefreshControl() {
+        output.draggedTable()
     }
 }
 
-//MARK: - Table view data source
+// MARK: - Table view data source
 
 extension RatesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         output.rates.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let rate = output.rates[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: RateCell.reuseIdentifier, for: indexPath) as! RateCell
-
+        
         cell.set(with: rate)
-
+        
         return cell
     }
 }
 
-//MARK: - Table view data delegate
+// MARK: - Table view data delegate
 
 extension RatesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

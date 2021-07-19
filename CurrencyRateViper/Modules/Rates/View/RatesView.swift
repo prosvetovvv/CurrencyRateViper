@@ -8,6 +8,7 @@
 import UIKit
 
 class RatesView: UIView {
+    var dateLabel = CRSecondaryTitleLabel(textAlignment: .center, fontSize: 12.0)
     let tableView = UITableView()
     
     // MARK: - Init
@@ -23,9 +24,12 @@ class RatesView: UIView {
     // MARK: - Private
     
     private func setupSelf() {
+        dateLabel.isHidden = true
+        
         tableView.rowHeight = 95
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
+        addSubview(dateLabel)
         addSubview(tableView)
         
         setNeedsUpdateConstraints()
@@ -36,7 +40,11 @@ class RatesView: UIView {
     override func updateConstraints() {
         super.updateConstraints()
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            dateLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            dateLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            dateLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            
+            tableView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor),
             tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)

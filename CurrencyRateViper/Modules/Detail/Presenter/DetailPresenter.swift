@@ -10,7 +10,7 @@ class DetailPresenter: DetailViewOutput {
     
     weak var view: DetailViewInput!
     var router: DetailRouterInput!
-
+    
     func viewIsReady() {
         view.setupInitialState()
     }

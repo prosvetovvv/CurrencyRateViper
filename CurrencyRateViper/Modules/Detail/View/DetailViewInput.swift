@@ -7,11 +7,11 @@
 //
 
 protocol DetailViewInput: class {
-
+    
     /**
-        @author Vitaly Prosvetov
-        Setup initial state of the view
-    */
-
+     @author Vitaly Prosvetov
+     Setup initial state of the view
+     */
+    
     func setupInitialState()
 }

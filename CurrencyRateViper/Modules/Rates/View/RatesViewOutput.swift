@@ -7,12 +7,15 @@
 //
 
 protocol RatesViewOutput {
-
+    
     /**
-        @author Vitaly Prosvetov
-        Notify presenter that view is ready
-    */
+     @author Vitaly Prosvetov
+     Notify presenter that view is ready
+     */
     var rates: [Rate] { get }
+    var currentDate: String { get }
+    
     func viewIsReady()
     func tappedCell(with rate: Rate)
+    func draggedTable()
 }
