@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RatesPresenter: RatesModuleInput, RatesViewOutput, RatesInteractorOutput {
+class RatesPresenter {
     
     var rates = [Rate]()
     var currentDate: String {
@@ -19,7 +19,7 @@ class RatesPresenter: RatesModuleInput, RatesViewOutput, RatesInteractorOutput {
         return formatter.string(from: date)
     }
     
-    weak var view: RatesViewInput!
+    var view: RatesViewInput!
     var interactor: RatesInteractorInput!
     var router: RatesRouterInput!
     
@@ -50,9 +50,11 @@ class RatesPresenter: RatesModuleInput, RatesViewOutput, RatesInteractorOutput {
             return formatter.string(from: price) ?? "0"
         }
     }
-    
-    // MARK: - RatesViewOutput
-    
+}
+
+// MARK: - RatesViewOutput
+
+extension RatesPresenter: RatesViewOutput {
     func viewIsReady() {
         view.setupInitialState()
         interactor.loadRates()
@@ -65,9 +67,11 @@ class RatesPresenter: RatesModuleInput, RatesViewOutput, RatesInteractorOutput {
     func draggedTable() {
         interactor.loadRates()
     }
-    
-    // MARK: - RatesInteractorOutput
-    
+}
+
+// MARK: - RatesInteractorOutput
+
+extension RatesPresenter: RatesInteractorOutput {
     func handleRatesLoaded(_ result: [RawRate]) {
         rates = result.map { Rate(currencyName: $0.name,
                                   country: getCountryCode(from: $0.currencyCodeTo),

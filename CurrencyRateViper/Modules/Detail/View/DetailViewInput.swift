@@ -6,12 +6,9 @@
 //  Copyright © 2021 Vitaly. All rights reserved.
 //
 
-protocol DetailViewInput: class {
-    
-    /**
-     @author Vitaly Prosvetov
-     Setup initial state of the view
-     */
-    
+import UIKit
+
+protocol DetailViewInput: AnyObject, Presentable, Dismissible {
+        
     func setupInitialState()
 }

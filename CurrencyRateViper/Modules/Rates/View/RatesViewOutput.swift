@@ -7,11 +7,7 @@
 //
 
 protocol RatesViewOutput {
-    
-    /**
-     @author Vitaly Prosvetov
-     Notify presenter that view is ready
-     */
+
     var rates: [Rate] { get }
     var currentDate: String { get }
     

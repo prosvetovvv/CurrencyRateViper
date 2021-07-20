@@ -7,12 +7,7 @@
 //
 
 protocol RatesViewInput: AnyObject {
-    
-    /**
-     @author Vitaly Prosvetov
-     Setup initial state of the view
-     */
-    
+        
     func setupInitialState()
     func handleRatesChanged()
     func ratesLoadError(_ error: CRError)

@@ -6,16 +6,29 @@
 //  Copyright © 2021 Vitaly. All rights reserved.
 //
 
+import UIKit
+
 class DetailPresenter: DetailViewOutput {
     
-    weak var view: DetailViewInput!
-    var router: DetailRouterInput!
+    var view: DetailViewInput!
     
     func viewIsReady() {
         view.setupInitialState()
     }
     
     func tappedXButton() {
-        router.dismiss()
+        self.dismiss()
+    }
+    
+    func dismiss() {
+        view.dismiss()
+    }
+}
+
+// MARK: - DetailPresenterInput
+
+extension DetailPresenter: DetailPresenterInput {
+    func present(from viewController: UIViewController) {
+        view.present(from: viewController)
     }
 }

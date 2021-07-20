@@ -8,11 +8,10 @@
 
 import UIKit
 
-class DetailViewController: UIViewController, DetailViewInput {
+class DetailViewController: UIViewController {
     
     private let rootView: DetailView
     var output: DetailViewOutput!
-    let configurator: DetailConfiguratorProtocol = DetailModuleConfigurator()
     
     // MARK: - Init
     
@@ -34,14 +33,7 @@ class DetailViewController: UIViewController, DetailViewInput {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configurator.configure(viewController: self)
         output.viewIsReady()
-    }
-    
-    // MARK: - DetailViewInput
-    
-    func setupInitialState() {
-        rootView.xButton.addTarget(self, action: #selector(tappedDismiss), for: .touchUpInside)
     }
     
     // MARK: - Objc
@@ -49,5 +41,27 @@ class DetailViewController: UIViewController, DetailViewInput {
     @objc
     private func tappedDismiss() {
         output.tappedXButton()
+    }
+}
+
+// MARK: - DetailViewInput
+
+extension DetailViewController: DetailViewInput {
+    func setupInitialState() {
+        rootView.xButton.addTarget(self, action: #selector(tappedDismiss), for: .touchUpInside)
+    }
+}
+
+// MARK: - DetailPresenterInput
+
+extension DetailViewController: DetailPresenterInput {
+    func present(from vc: UIViewController) {
+        self.modalPresentationStyle = .overFullScreen
+        self.modalTransitionStyle = .crossDissolve
+        vc.present(self, animated: true, completion: nil)
+    }
+    
+    func dismiss() {
+        dismiss(animated: true, completion: nil)
     }
 }

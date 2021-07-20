@@ -16,12 +16,8 @@ class RatesRouter: RatesRouterInput {
         self.viewController = viewController
     }
     
-    func showDetail(with rate: Rate) {
-        let detailVC = DetailViewController(with: rate)
-        
-        detailVC.modalPresentationStyle = .overFullScreen
-        detailVC.modalTransitionStyle = .crossDissolve
-        
-        viewController.present(detailVC, animated: true)
+    func showDetail(with rate: Rate) {        
+        let detailModule = DetailModule(with: rate)
+        detailModule.present(from: viewController)
     }
 }

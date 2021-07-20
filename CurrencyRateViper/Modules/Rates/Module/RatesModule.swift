@@ -1,24 +1,18 @@
 //
-//  RatesRatesConfigurator.swift
+//  RatesModule.swift
 //  CurrencyRateViper
 //
-//  Created by Vitaly Prosvetov on 12/07/2021.
-//  Copyright © 2021 Vitaly. All rights reserved.
+//  Created by Vitaly Prosvetov on 20.07.2021.
 //
 
 import UIKit
 
-
-class RatesModuleConfigurator: RatesConfiguratorProtocol {
+class RatesModule {
+    private let viewController: RatesViewController
     
-    func configureModuleForViewInput<UIViewController>(viewInput: UIViewController) {
+    init() {
+        self.viewController = RatesViewController()
         
-        if let viewController = viewInput as? RatesViewController {
-            configure(viewController: viewController)
-        }
-    }
-    
-    func configure(viewController: RatesViewController) {
         let router = RatesRouter(viewController: viewController)
         let network = Network()
         let rateProvider = RateProvider(network: network)
@@ -33,5 +27,13 @@ class RatesModuleConfigurator: RatesConfiguratorProtocol {
         
         presenter.interactor = interactor
         viewController.output = presenter
+    }
+}
+
+// MARK: - RatesModuleOutput
+
+extension RatesModule: RatesModuleOutput {
+    func createVC() -> RatesViewController {
+        viewController
     }
 }
