@@ -9,16 +9,7 @@
 import UIKit
 
 class RatesPresenter {
-    
     var rates = [Rate]()
-    var currentDate: String {
-        let date = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
-        
-        return formatter.string(from: date)
-    }
-    
     var view: RatesViewInput!
     var interactor: RatesInteractorInput!
     var router: RatesRouterInput!
@@ -67,12 +58,28 @@ extension RatesPresenter: RatesViewOutput {
     func draggedTable() {
         interactor.loadRates()
     }
+    
+    func getRate(with index: Int) -> Rate? {
+        rates[safe: index]
+    }
+    
+    func getRatesCount() -> Int {
+        rates.count
+    }
+    
+    func getCurrentDate() -> String {
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        
+        return formatter.string(from: date)
+    }
 }
 
 // MARK: - RatesInteractorOutput
 
 extension RatesPresenter: RatesInteractorOutput {
-    func handleRatesLoaded(_ result: [RawRate]) {
+    func handleRatesLoaded( _ result: [RawRate]) {
         rates = result.map { Rate(currencyName: $0.name,
                                   country: getCountryCode(from: $0.currencyCodeTo),
                                   currencyCode: $0.currencyCodeTo,

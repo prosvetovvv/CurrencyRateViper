@@ -7,11 +7,10 @@
 //
 
 protocol RatesViewOutput {
-
-    var rates: [Rate] { get }
-    var currentDate: String { get }
-    
     func viewIsReady()
     func tappedCell(with rate: Rate)
     func draggedTable()
+    func getRate(with index: Int) -> Rate?
+    func getRatesCount() -> Int
+    func getCurrentDate() -> String
 }

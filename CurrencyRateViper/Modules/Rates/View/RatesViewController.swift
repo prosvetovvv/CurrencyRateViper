@@ -10,21 +10,21 @@ import UIKit
 
 class RatesViewController: UIViewController {
     
-    private let rootView: RatesView
+    private let rootView = RatesView()
     
     var output: RatesViewOutput!
     var presenter: RatesPresenter!
     
     // MARK: - Init
     
-    init() {
-        self.rootView = RatesView()
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+//    init() {
+//        //self.rootView = RatesView()
+//        super.init(nibName: nil, bundle: nil)
+//    }
+//
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     
     // MARK: - Life cycle
     
@@ -67,7 +67,7 @@ extension RatesViewController: RatesViewInput {
         rootView.tableView.reloadData()
         
         rootView.dateLabel.isHidden = false
-        rootView.dateLabel.text = "Обновлено: \(output.currentDate)"
+        rootView.dateLabel.text = "Обновлено: \(output.getCurrentDate())"
         
         dismissSpinnerView()
         rootView.tableView.refreshControl?.endRefreshing()
@@ -84,12 +84,12 @@ extension RatesViewController: RatesViewInput {
 
 extension RatesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        output.rates.count
+        output.getRatesCount()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let rate = output.rates[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: RateCell.reuseIdentifier, for: indexPath) as! RateCell
+        guard let rate = output.getRate(with: indexPath.row) else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: RateCell.reuseIdentifier, for: indexPath) as? RateCell else { return UITableViewCell()}
         
         cell.set(with: rate)
         
@@ -101,7 +101,7 @@ extension RatesViewController: UITableViewDataSource {
 
 extension RatesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let rate = output.rates[safe: indexPath.row] else { return }
+        guard let rate = output.getRate(with: indexPath.row) else { return }
         
         output.tappedCell(with: rate)
     }
