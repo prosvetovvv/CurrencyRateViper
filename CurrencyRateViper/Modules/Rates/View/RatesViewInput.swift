@@ -9,6 +9,6 @@
 protocol RatesViewInput: AnyObject {
         
     func setupInitialState()
-    func handleRatesChanged()
+    func ratesUpdated()
     func ratesLoadError(_ error: CRError)
 }

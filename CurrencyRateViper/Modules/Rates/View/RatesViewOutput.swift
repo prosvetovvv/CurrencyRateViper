@@ -10,7 +10,6 @@ protocol RatesViewOutput {
     func viewIsReady()
     func tappedCell(with rate: Rate)
     func draggedTable()
-    func getRate(with index: Int) -> Rate?
-    func getRatesCount() -> Int
+    func getRates() -> [Rate]
     func getCurrentDate() -> String
 }

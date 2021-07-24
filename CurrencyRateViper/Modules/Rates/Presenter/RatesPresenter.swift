@@ -9,7 +9,8 @@
 import UIKit
 
 class RatesPresenter {
-    var rates = [Rate]()
+    private var rates = [Rate]()
+    
     var view: RatesViewInput!
     var interactor: RatesInteractorInput!
     var router: RatesRouterInput!
@@ -41,6 +42,17 @@ class RatesPresenter {
             return formatter.string(from: price) ?? "0"
         }
     }
+        
+    private func formatRawRate(_ rawRate: RawRate) -> Rate {
+        Rate(currencyName: rawRate.name,
+             country: getCountryCode(from: rawRate.currencyCodeTo),
+             currencyCode: rawRate.currencyCodeTo,
+             buyPrice: formatPrice(input: rawRate.buy, currency: rawRate.currencyCodeFrom),
+             salePrice: formatPrice(input: rawRate.sale, currency: rawRate.currencyCodeFrom),
+             deltaBuy: rawRate.deltaBuy.convertToDouble(),
+             deltaSale: rawRate.deltaSale.convertToDouble()
+        )
+    }
 }
 
 // MARK: - RatesViewOutput
@@ -59,12 +71,8 @@ extension RatesPresenter: RatesViewOutput {
         interactor.loadRates()
     }
     
-    func getRate(with index: Int) -> Rate? {
-        rates[safe: index]
-    }
-    
-    func getRatesCount() -> Int {
-        rates.count
+    func getRates() -> [Rate] {
+        rates
     }
     
     func getCurrentDate() -> String {
@@ -80,17 +88,8 @@ extension RatesPresenter: RatesViewOutput {
 
 extension RatesPresenter: RatesInteractorOutput {
     func handleRatesLoaded( _ result: [RawRate]) {
-        rates = result.map { Rate(currencyName: $0.name,
-                                  country: getCountryCode(from: $0.currencyCodeTo),
-                                  currencyCode: $0.currencyCodeTo,
-                                  buyPrice: formatPrice(input: $0.buy, currency: $0.currencyCodeFrom),
-                                  salePrice: formatPrice(input: $0.sale, currency: $0.currencyCodeFrom),
-                                  deltaBuy: $0.deltaBuy.convertToDouble(),
-                                  deltaSale: $0.deltaSale.convertToDouble()
-        )
-        }
-        
-        view.handleRatesChanged()
+        rates = result.map { formatRawRate($0) }
+        view.ratesUpdated()
     }
     
     func handleLoadError(_ error: CRError) {

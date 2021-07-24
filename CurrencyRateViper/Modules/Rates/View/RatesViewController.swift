@@ -13,7 +13,7 @@ class RatesViewController: UIViewController {
     private let rootView = RatesView()
     
     var output: RatesViewOutput!
-    var presenter: RatesPresenter!
+    //var presenter: RatesPresenter!
     
     // MARK: - Init
     
@@ -63,7 +63,7 @@ extension RatesViewController: RatesViewInput {
         
     }
     
-    func handleRatesChanged() {
+    func ratesUpdated() {
         rootView.tableView.reloadData()
         
         rootView.dateLabel.isHidden = false
@@ -84,11 +84,12 @@ extension RatesViewController: RatesViewInput {
 
 extension RatesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        output.getRatesCount()
+        output.getRates().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let rate = output.getRate(with: indexPath.row) else { return UITableViewCell() }
+        let rates = output.getRates()
+        guard let rate = rates[safe: indexPath.row] else { return UITableViewCell() }
         guard let cell = tableView.dequeueReusableCell(withIdentifier: RateCell.reuseIdentifier, for: indexPath) as? RateCell else { return UITableViewCell()}
         
         cell.set(with: rate)
@@ -101,7 +102,8 @@ extension RatesViewController: UITableViewDataSource {
 
 extension RatesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let rate = output.getRate(with: indexPath.row) else { return }
+        let rates = output.getRates()
+        guard let rate = rates[safe: indexPath.row] else { return }
         
         output.tappedCell(with: rate)
     }
